@@ -4756,7 +4756,7 @@
         }
       }
     },
-    "PaginatedInferenceDeploymentList": {
+    "PaginatedInferenceDeploymentsList": {
       "type": "object",
       "description": "Paginated list of Machine Learning Inference Deployment objects wrapped in ARM resource envelope.",
       "properties": {
@@ -5789,7 +5789,7 @@
         //   "description": "The identity of the resource."
         // },
         // TODO: DOES ENDPOINT NEED STATUS AND IS THIS BASED ON DEPLOYMENTS?
-        "provisioningState": {
+        "inferenceEndpointProvisioningState": {
           // https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/Addendum.md#provisioningstate-property
           "type": "string",
           "enum": [
@@ -5801,7 +5801,7 @@
             "Canceled" // TODO: needed? 
           ],
           "x-ms-enum": {
-            "name": "ProvisioningState",
+            "name": "InferenceEndpointProvisioningState",
             "modelAsString": true
           },
           "readOnly": true,
@@ -5828,23 +5828,9 @@
           "description": "The URI for sending inference requests.",
           "type": "string",
           "readOnly": true
-        },
-        "deploymentWeights": {
-          "description": "Weight distribution for deployments in the endpoint",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InferenceEndpointDeploymentWeight"
-          }
         }
       },
       "x-ms-discriminator-value": "InferenceEndpoint"
-    },
-    "InferenceEndpointDeploymentWeight": {
-      "description": "Weight of a deployment in an endpoint.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "integer"
-      }
     },
     "InferenceEndpointAuthSettings": {
       "description": "Authentication settings for an Inference Endpoint.",
@@ -5858,15 +5844,7 @@
     },
     "InferenceEndpointUpdateParameter": {
       "description": "The parameters for updating an inference endpoint.",
-      "properties": {
-        "deploymentWeights": {
-          "description": "Weight distribution for deployments in the endpoint",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InferenceEndpointDeploymentWeight"
-          }
-        }
-      }
+      "properties": { }
     },
     //////////////////////////////////////////////////////
     // Inference Deployment Specs
@@ -5995,6 +5973,10 @@
         "sku": {
           "$ref": "#/definitions/SkuDescription"
         },
+        "weight": {
+          "description": "weight of the deployment for load balancing.",
+          "type": "integer"
+        },
         // "dataCollection": {
         //   "description": "Details of the data collection options specified.",
         //   "allOf": [
@@ -6007,7 +5989,7 @@
           "description": "Whether or not Application Insights is enabled.",
           "type": "boolean"
         },
-        "provisioningState": {
+        "InferenceDeploymentProvisioningState": {
           // https://github.com/Azure/azure-resource-manager-rpc/blob/master/v1.0/Addendum.md#provisioningstate-property
           "type": "string",
           "enum": [
@@ -6020,7 +6002,7 @@
             "Canceled" // TODO: needed?
           ],
           "x-ms-enum": {
-            "name": "ProvisioningState",
+            "name": "InferenceDeploymentProvisioningState",
             "modelAsString": true
           },
           "readOnly": true,
@@ -6069,6 +6051,10 @@
         // with the sku in the base "Resource" class
         "sku": {
           "$ref": "#/definitions/SkuDescription"
+        },
+        "weight": {
+          "description": "The weight of the deployment for load balancing.",
+          "type": "integer"
         },
         // "dataCollection": {
         //   "description": "Details of the data collection options specified.",
@@ -6215,6 +6201,10 @@
           "description": "Current number of instances assigned to the resource.",
           "type": "integer"
         },
+        "weight": {
+          "description": "The weight of the deployment for load balancing.",
+          "type": "integer"
+        }
       }
     },
     "AKSServiceResponse": {
